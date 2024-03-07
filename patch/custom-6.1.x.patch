@@ -1,8 +1,28 @@
+diff --git a/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel-overlay.dts b/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel-overlay.dts
+index a5686f468..9872092b3 100644
+--- a/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel-overlay.dts
++++ b/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel-overlay.dts
+@@ -108,10 +108,11 @@ __overrides__ {
+ 				   <&touch>, "touchscreen-inverted-x?",
+ 				   <&touch>, "touchscreen-swapped-x-y?";
+ 		11_9_inch = <&panel>, "compatible=waveshare,11.9inch-panel",
+-				   <&touch>, "touchscreen-size-x:0=320",
+-				   <&touch>, "touchscreen-size-y:0=1480",
+-				   <&touch>, "touchscreen-inverted-x?",
+-				   <&touch>, "touchscreen-swapped-x-y?";
++				   <&touch>, "touchscreen-swapped-x-y?",
++				   <&touch>, "touchscreen-inverted-x?";
++		4_0_inch_C = <&panel>, "compatible=waveshare,4inch-panel",
++				   <&touch>, "touchscreen-size-x:0=720",
++				   <&touch>, "touchscreen-size-y:0=720";
+ 		i2c1 = <&i2c_frag>, "target:0=",<&i2c1>,
+ 		       <0>, "-3-4+5";
+ 		disable_touch = <&touch>, "status=disabled";
 diff --git a/drivers/gpu/drm/panel/panel-waveshare-dsi.c b/drivers/gpu/drm/panel/panel-waveshare-dsi.c
-index 0e8e6f089..91c08ed85 100644
+index 0e8e6f089..1415a2aef 100644
 --- a/drivers/gpu/drm/panel/panel-waveshare-dsi.c
 +++ b/drivers/gpu/drm/panel/panel-waveshare-dsi.c
-@@ -131,7 +131,7 @@ static const struct drm_display_mode ws_panel_11_9_mode = {
+@@ -131,13 +131,28 @@ static const struct drm_display_mode ws_panel_11_9_mode = {
  	.hdisplay = 320,
  	.hsync_start = 320 + 60,
  	.hsync_end = 320 + 60 + 60,
@@ -11,7 +31,28 @@ index 0e8e6f089..91c08ed85 100644
  	.vdisplay = 1480,
  	.vsync_start = 1480 + 60,
  	.vsync_end = 1480 + 60 + 60,
-@@ -340,9 +340,8 @@ static int ws_panel_probe(struct i2c_client *i2c,
+ 	.vtotal = 1480 + 60 + 60 + 60,
+ };
+ 
++/* 4inch 720x720
++ * https://www.waveshare.com/4inch-dsi-lcd-c.htm
++ */
++static const struct drm_display_mode ws_panel_4_mode = {
++	.clock = 50000,
++	.hdisplay = 720,
++	.hsync_start = 720 + 32,
++	.hsync_end = 720 + 32 + 200,
++	.htotal = 720 + 32 + 200 + 120,
++	.vdisplay = 720,
++	.vsync_start = 720 + 8,
++	.vsync_end = 720 + 8 + 4,
++	.vtotal = 720 + 8 + 4 + 16,
++};
++
+ static struct ws_panel *panel_to_ts(struct drm_panel *panel)
+ {
+ 	return container_of(panel, struct ws_panel, base);
+@@ -340,9 +355,8 @@ static int ws_panel_probe(struct i2c_client *i2c,
  	 */
  	drm_panel_add(&ts->base);
  
@@ -23,3 +64,13 @@ index 0e8e6f089..91c08ed85 100644
  	ts->dsi->format = MIPI_DSI_FMT_RGB888;
  	ts->dsi->lanes = 2;
  
+@@ -399,6 +413,9 @@ static const struct of_device_id ws_panel_of_ids[] = {
+ 	}, {
+ 		.compatible = "waveshare,11.9inch-panel",
+ 		.data = &ws_panel_11_9_mode,
++	}, {
++		.compatible = "waveshare,4inch-panel",
++		.data = &ws_panel_4_mode,
+ 	}, {
+ 		/* sentinel */
+ 	}
