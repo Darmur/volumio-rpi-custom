@@ -69,6 +69,10 @@ xz -f linux-${KERNEL_VERSION}+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f linux-${KERNEL_VERSION}-v7+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f  linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
+xz -f linux-${KERNEL_VERSION}+/drivers/net/usb/ax88179_178a.ko
+xz -f linux-${KERNEL_VERSION}-v7+/drivers/net/usb/ax88179_178a.ko
+xz -f linux-${KERNEL_VERSION}-v7l+/drivers/net/usb/ax88179_178a.ko
+xz -f  linux-${KERNEL_VERSION}-v8+/drivers/net/usb/ax88179_178a.ko
 
 echo "!!!  Creating archive  !!!"
 rm -rf modules-rpi-${KERNEL_VERSION}-custom/
@@ -77,11 +81,20 @@ mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/ker
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/net/usb/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/net/usb/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/net/usb/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/net/usb/
 cp linux-${KERNEL_VERSION}+/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel.dtbo modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
 cp linux-${KERNEL_VERSION}+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v7+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
+cp linux-${KERNEL_VERSION}+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/drivers/net/usb/
+cp linux-${KERNEL_VERSION}-v7+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/net/usb/
+cp linux-${KERNEL_VERSION}-v7l+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/net/usb/
+cp linux-${KERNEL_VERSION}-v8+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/net/usb/
+
 tar -czvf modules-rpi-${KERNEL_VERSION}-custom.tar.gz modules-rpi-${KERNEL_VERSION}-custom/ --owner=0 --group=0
 md5sum modules-rpi-${KERNEL_VERSION}-custom.tar.gz > modules-rpi-${KERNEL_VERSION}-custom.md5sum.txt
 sha1sum modules-rpi-${KERNEL_VERSION}-custom.tar.gz > modules-rpi-${KERNEL_VERSION}-custom.sha1sum.txt
