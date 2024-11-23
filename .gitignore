@@ -1,2 +1,5 @@
 # build dirs
 linux-*/
+*.dtbo
+*.ko.xz
+0*
