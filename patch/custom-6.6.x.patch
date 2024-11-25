@@ -1,3 +1,21 @@
+diff --git a/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts b/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts
+index d1eb31df1..92d28a34b 100644
+--- a/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts
++++ b/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts
+@@ -1,5 +1,5 @@
+ /*
+- * vc4-kms-dsi-ili9881-5inch-overlay.dts
++ * vc4-kms-dsi-ili9881-7inch-overlay.dts
+  */
+ 
+ /dts-v1/;
+@@ -118,5 +118,6 @@ __overrides__ {
+ 		invy = <0>, "+11";
+ 		swapxy = <&gt911>,"touchscreen-swapped-x-y?";
+ 		disable_touch = <&gt911>, "status=disabled";
++		rotation = <&dsi_panel>, "rotation:0";
+ 	};
+ };
 diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
 index 73de34179..5b2bbb625 100644
 --- a/drivers/net/usb/ax88179_178a.c
