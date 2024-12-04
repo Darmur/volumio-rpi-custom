@@ -6,7 +6,7 @@ KERNEL_VERSION="6.6.62"
 case $KERNEL_VERSION in
     "6.6.62")
       KERNEL_COMMIT="9a9bda382acec723c901e5ae7c7f415d9afbf635"
-      PATCH="custom-6.6.y.patch"
+      PATCH="custom-6.6.z.patch"
       ;;
     "6.6.56")
       KERNEL_COMMIT="a5efb544aeb14338b481c3bdc27f709e8ee3cf8c"
@@ -115,36 +115,98 @@ echo "!!!  RPi3/4/5 64-bit build done  !!!"
 echo "-------------------------"
 
 echo "!!!  Compressing modules with XZ  !!!"
+
 xz -f linux-${KERNEL_VERSION}+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f linux-${KERNEL_VERSION}-v7+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f  linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
+
 xz -f linux-${KERNEL_VERSION}+/drivers/net/usb/ax88179_178a.ko
 xz -f linux-${KERNEL_VERSION}-v7+/drivers/net/usb/ax88179_178a.ko
 xz -f linux-${KERNEL_VERSION}-v7l+/drivers/net/usb/ax88179_178a.ko
 xz -f  linux-${KERNEL_VERSION}-v8+/drivers/net/usb/ax88179_178a.ko
 
+xz -f linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-boss-dac.ko
+xz -f linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-boss-dac.ko
+xz -f linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-boss-dac.ko
+xz -f  linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-boss-dac.ko
+
+xz -f linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko
+xz -f linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko
+xz -f linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko
+xz -f  linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko
+
+xz -f linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-katana-codec.ko
+xz -f linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-katana-codec.ko
+xz -f linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-katana-codec.ko
+xz -f  linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-katana-codec.ko
+
+xz -f linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko
+xz -f linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko
+xz -f linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko
+xz -f  linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko
+
+xz -f linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko
+xz -f linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko
+xz -f linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko
+xz -f  linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko
+
 echo "!!!  Creating archive  !!!"
 rm -rf modules-rpi-${KERNEL_VERSION}-custom/
+
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
+
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/net/usb/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/net/usb/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/net/usb/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/net/usb/
+
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
+
 cp linux-${KERNEL_VERSION}+/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel.dtbo modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
 cp linux-${KERNEL_VERSION}+/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch.dtbo modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
-cp linux-${KERNEL_VERSION}+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/drivers/gpu/drm/panel/
+
+cp linux-${KERNEL_VERSION}+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v7+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
 cp linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
-cp linux-${KERNEL_VERSION}+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/drivers/net/usb/
+
+cp linux-${KERNEL_VERSION}+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/net/usb/
 cp linux-${KERNEL_VERSION}-v7+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/net/usb/
 cp linux-${KERNEL_VERSION}-v7l+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/net/usb/
 cp linux-${KERNEL_VERSION}-v8+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/net/usb/
+
+cp linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-boss-dac.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-boss-dac.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-boss-dac.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-boss-dac.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
+
+cp linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-boss2-dac.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
+
+cp linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-katana-codec.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-katana-codec.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-katana-codec.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-katana-codec.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
+
+cp linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
+
+cp linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
+cp linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-i-sabre-q2m.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
 
 tar -czvf modules-rpi-${KERNEL_VERSION}-custom.tar.gz modules-rpi-${KERNEL_VERSION}-custom/ --owner=0 --group=0
 md5sum modules-rpi-${KERNEL_VERSION}-custom.tar.gz > modules-rpi-${KERNEL_VERSION}-custom.md5sum.txt
