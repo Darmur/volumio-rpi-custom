@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CPU=10
+CPU=4
 KERNEL_VERSION="6.6.62"
 
 case $KERNEL_VERSION in
