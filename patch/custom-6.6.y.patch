@@ -1,5 +1,5 @@
 diff --git a/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts b/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts
-index d1eb31df1..53c3fc5d2 100644
+index d1eb31df1..92d28a34b 100644
 --- a/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts
 +++ b/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch-overlay.dts
 @@ -1,5 +1,5 @@
@@ -9,15 +9,7 @@ index d1eb31df1..53c3fc5d2 100644
   */
  
  /dts-v1/;
-@@ -55,6 +55,7 @@ dsi_panel: dsi_panel@0 {
- 				compatible = "raspberrypi,dsi-7inch";
- 				reset-gpio = <&display_mcu 0 GPIO_ACTIVE_LOW>;
- 				backlight = <&display_mcu>;
-+				rotation = <0>;
- 
- 				port {
- 					panel_in: endpoint {
-@@ -118,5 +119,6 @@ __overrides__ {
+@@ -118,5 +118,6 @@ __overrides__ {
  		invy = <0>, "+11";
  		swapxy = <&gt911>,"touchscreen-swapped-x-y?";
  		disable_touch = <&gt911>, "status=disabled";
