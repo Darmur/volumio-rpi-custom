@@ -116,6 +116,7 @@ echo "-------------------------"
 
 echo "!!!  Compressing modules with XZ  !!!"
 
+
 xz -f linux-${KERNEL_VERSION}+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f linux-${KERNEL_VERSION}-v7+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
 xz -f linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko
@@ -135,6 +136,11 @@ xz -f linux-${KERNEL_VERSION}+/sound/soc/codecs/snd-soc-pcm512x.ko
 xz -f linux-${KERNEL_VERSION}-v7+/sound/soc/codecs/snd-soc-pcm512x.ko
 xz -f linux-${KERNEL_VERSION}-v7l+/sound/soc/codecs/snd-soc-pcm512x.ko
 xz -f  linux-${KERNEL_VERSION}-v8+/sound/soc/codecs/snd-soc-pcm512x.ko
+
+xz -f linux-${KERNEL_VERSION}+/sound/usb/snd-usb-audio.ko
+xz -f linux-${KERNEL_VERSION}-v7+/sound/usb/snd-usb-audio.ko
+xz -f linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko
+xz -f linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko
 
 echo "!!!  Creating archive  !!!"
 rm -rf modules-rpi-${KERNEL_VERSION}-custom/
@@ -160,6 +166,12 @@ mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/codecs/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/codecs/
 
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/usb/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/usb/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/usb/
+mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/usb/
+
+
 cp linux-${KERNEL_VERSION}+/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel.dtbo modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
 cp linux-${KERNEL_VERSION}+/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch.dtbo modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
 
@@ -182,6 +194,11 @@ cp linux-${KERNEL_VERSION}+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${K
 cp linux-${KERNEL_VERSION}-v7+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/codecs/
 cp linux-${KERNEL_VERSION}-v7l+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/codecs/
 cp linux-${KERNEL_VERSION}-v8+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/codecs/
+
+cp linux-${KERNEL_VERSION}+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/usb/
+cp linux-${KERNEL_VERSION}-v7+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/usb/
+cp linux-${KERNEL_VERSION}-v7l+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/usb/
+cp linux-${KERNEL_VERSION}-v8+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/usb/
 
 tar -czvf modules-rpi-${KERNEL_VERSION}-custom.tar.gz modules-rpi-${KERNEL_VERSION}-custom/ --owner=0 --group=0
 md5sum modules-rpi-${KERNEL_VERSION}-custom.tar.gz > modules-rpi-${KERNEL_VERSION}-custom.md5sum.txt
