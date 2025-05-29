@@ -1,7 +1,9 @@
+#include <linux/string.h>
 #include <linux/signal.h>
 #include <linux/slab.h>
 #include <linux/module.h>
 #include <linux/netdevice.h>
+#include <linux/kernel.h>
 #include <linux/etherdevice.h>
 #include <linux/mii.h>
 #include <linux/ethtool.h>
@@ -23,6 +25,21 @@
 #include <uapi/linux/mdio.h>
 
 #include "ax88179_178a.h"
+
+#ifndef HAVE_DECL_STRLCPY
+#include <linux/types.h>
+static inline size_t strlcpy(char *dest, const char *src, size_t size)
+{
+	size_t src_len = strlen(src);
+
+	if (size) {
+		size_t copy_len = (src_len >= size) ? size - 1 : src_len;
+		memcpy(dest, src, copy_len);
+		dest[copy_len] = '\0';
+	}
+	return src_len;
+}
+#endif
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);
@@ -1739,11 +1756,11 @@ static int ax88179_set_mac_addr(struct net_device *net, void *p)
 	if (!is_valid_ether_addr(addr->sa_data))
 		return -EADDRNOTAVAIL;
 
-	memcpy(net->dev_addr, addr->sa_data, ETH_ALEN);	
+	memcpy((void *)net->dev_addr, addr->sa_data, ETH_ALEN);	
 
 	/* Set the MAC address */
 	ret = ax88179_write_cmd(dev, AX_ACCESS_MAC, AX_NODE_ID, ETH_ALEN,
-				 ETH_ALEN, net->dev_addr);
+				 ETH_ALEN, (void *)net->dev_addr);
 	if (ret < 0)
 		return ret;
 
@@ -2389,7 +2406,7 @@ static int ax_access_eeprom_mac(struct ax_device *axdev, u8 *buf, u8 offset, int
 				   ret);
 			return ret;
 		}
-		memcpy(axdev->netdev->dev_addr, buf, ETH_ALEN);
+		memcpy((void *)axdev->netdev->dev_addr, buf, ETH_ALEN);
 	}
 	else {
 		/* reload eeprom data */
@@ -2437,7 +2454,7 @@ static int ax_get_mac(struct ax_device *axdev, u8* buf)
 		goto out;
 
 	if (ax_check_ether_addr(axdev)) {
-		ret = ax_access_eeprom_mac(axdev, axdev->netdev->dev_addr, 0x0, 1);
+		ret = ax_access_eeprom_mac(axdev, (u8 *)axdev->netdev->dev_addr, 0x0, 1);
 		if (ret < 0) {
 			netdev_err(axdev->netdev,
 				   "Failed to write MAC to EEPROM: %d", ret);
@@ -2466,7 +2483,7 @@ static int ax_get_mac(struct ax_device *axdev, u8* buf)
 	memcpy(axdev->netdev->perm_addr, axdev->netdev->dev_addr, ETH_ALEN);
 
 	ax88179_write_cmd(axdev, AX_ACCESS_MAC, AX_NODE_ID, ETH_ALEN,
-			  ETH_ALEN, axdev->netdev->dev_addr);
+			  ETH_ALEN, (void *)axdev->netdev->dev_addr);
 	
 	if (ret < 0) {
 		netdev_err(axdev->netdev, "Failed to write MAC address: %d", ret);

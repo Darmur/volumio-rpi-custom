@@ -432,4 +432,14 @@ AX88179_BULKIN_SIZE[] =	{
 	{7, 0xae, 7, 	0x18, 0xff},
 };
 
-#endif /* __LINUX_USBNET_ASIX_H */
+// Internal USB command helpers
+int __ax_read_cmd(struct ax_device *dev, u8 cmd, u8 reqtype,
+                  u16 value, u16 index, void *data, u16 size);
+int __ax_write_cmd(struct ax_device *dev, u8 cmd, u8 reqtype,
+                   u16 value, u16 index, const void *data, u16 size);
+int __ax_read_cmd_nopm(struct ax_device *dev, u8 cmd, u8 reqtype,
+                       u16 value, u16 index, void *data, u16 size);
+int __ax_write_cmd_nopm(struct ax_device *dev, u8 cmd, u8 reqtype,
+                        u16 value, u16 index, const void *data, u16 size);
+
+						#endif /* __LINUX_USBNET_ASIX_H */
