@@ -1,9 +1,13 @@
 #!/bin/bash
 
 CPU=4
-KERNEL_VERSION="6.12.27"
+KERNEL_VERSION="6.12.34"
 
 case $KERNEL_VERSION in
+    "6.12.34")
+      KERNEL_COMMIT="4f435f9e89a133baab3e2c9624b460af335bbe91"
+      PATCH="custom-6.12.y.patch"
+      ;;
     "6.12.27")
       KERNEL_COMMIT="f54e67fef6e726725d3a8f56d232194497bd247c"
       PATCH="custom-6.12.x.patch"
@@ -124,26 +128,10 @@ find linux-${KERNEL_VERSION}-v8+/drivers/net/wireless/realtek/rtw88/ -name '*.ko
 echo "!!!  Creating archive  !!!"
 rm -rf modules-rpi-${KERNEL_VERSION}-custom/
 
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/gpu/drm/panel/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/gpu/drm/panel/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
-
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/net/usb/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/net/usb/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/net/usb/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/net/usb/
-
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
-
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/codecs/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/codecs/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/codecs/
-mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/codecs/
 
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/usb/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/usb/
@@ -155,28 +143,10 @@ mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/net/wireless/realtek/rtw88/
 mkdir -p modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/net/wireless/realtek/rtw88/
 
-cp linux-${KERNEL_VERSION}+/arch/arm/boot/dts/overlays/vc4-kms-dsi-waveshare-panel.dtbo modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
-cp linux-${KERNEL_VERSION}+/arch/arm/boot/dts/overlays/vc4-kms-dsi-ili9881-7inch.dtbo modules-rpi-${KERNEL_VERSION}-custom/boot/overlays
-
-cp linux-${KERNEL_VERSION}+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/gpu/drm/panel/
-cp linux-${KERNEL_VERSION}-v7+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/gpu/drm/panel/
-cp linux-${KERNEL_VERSION}-v7l+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/gpu/drm/panel/
-cp linux-${KERNEL_VERSION}-v8+/drivers/gpu/drm/panel/panel-waveshare-dsi.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/gpu/drm/panel/
-
 cp linux-${KERNEL_VERSION}+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/drivers/net/usb/
 cp linux-${KERNEL_VERSION}-v7+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/drivers/net/usb/
 cp linux-${KERNEL_VERSION}-v7l+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/drivers/net/usb/
 cp linux-${KERNEL_VERSION}-v8+/drivers/net/usb/ax88179_178a.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/drivers/net/usb/
-
-cp linux-${KERNEL_VERSION}+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/bcm/
-cp linux-${KERNEL_VERSION}-v7+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/bcm/
-cp linux-${KERNEL_VERSION}-v7l+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/bcm/
-cp linux-${KERNEL_VERSION}-v8+/sound/soc/bcm/snd-soc-allo-piano-dac-plus.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/bcm/
-
-cp linux-${KERNEL_VERSION}+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${KERNEL_VERSION}-custom//lib/modules/${KERNEL_VERSION}+/kernel/sound/soc/codecs/
-cp linux-${KERNEL_VERSION}-v7+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/soc/codecs/
-cp linux-${KERNEL_VERSION}-v7l+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7l+/kernel/sound/soc/codecs/
-cp linux-${KERNEL_VERSION}-v8+/sound/soc/codecs/snd-soc-pcm512x.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v8+/kernel/sound/soc/codecs/
 
 cp linux-${KERNEL_VERSION}+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}+/kernel/sound/usb/
 cp linux-${KERNEL_VERSION}-v7+/sound/usb/snd-usb-audio.ko* modules-rpi-${KERNEL_VERSION}-custom/lib/modules/${KERNEL_VERSION}-v7+/kernel/sound/usb/
