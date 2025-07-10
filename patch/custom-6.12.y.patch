@@ -1,117 +1,103 @@
-From d8ccd40e0db87d8e2e1dbe0facefaafed1d541c4 Mon Sep 17 00:00:00 2001
-From: foonerd <andser@gmail.com>
-Date: Sat, 5 Jul 2025 17:07:19 +0100
-Subject: [PATCH] Volumio integration - custom modules
-
-Signed-off-by: foonerd <andser@gmail.com>
----
- drivers/net/usb/ax88179_178a.c                |  3683 ++-
- drivers/net/usb/ax88179_178a.h                |   445 +
- drivers/net/wireless/realtek/rtw88/Kconfig    |   143 +-
- drivers/net/wireless/realtek/rtw88/Makefile   |   120 +-
- drivers/net/wireless/realtek/rtw88/bf.c       |     8 +
- drivers/net/wireless/realtek/rtw88/bitfield.h |   155 +
- drivers/net/wireless/realtek/rtw88/coex.c     |    37 +-
- drivers/net/wireless/realtek/rtw88/coex.h     |    11 +
- drivers/net/wireless/realtek/rtw88/compiler.h |   552 +
- .../wireless/realtek/rtw88/convert_firmware.c |    41 +
- .../wireless/realtek/rtw88/convert_firmware.h | 26551 ++++++++++++++++
- drivers/net/wireless/realtek/rtw88/debug.c    |    59 +-
- drivers/net/wireless/realtek/rtw88/debug.h    |     1 +
- drivers/net/wireless/realtek/rtw88/fw.c       |   115 +-
- drivers/net/wireless/realtek/rtw88/fw.h       |    22 +-
- drivers/net/wireless/realtek/rtw88/hci.h      |     8 +
- drivers/net/wireless/realtek/rtw88/led.c      |    73 +
- drivers/net/wireless/realtek/rtw88/led.h      |    25 +
- drivers/net/wireless/realtek/rtw88/mac.c      |    49 +-
- drivers/net/wireless/realtek/rtw88/mac.h      |     5 +
- drivers/net/wireless/realtek/rtw88/mac80211.c |    82 +-
- drivers/net/wireless/realtek/rtw88/main.c     |   259 +-
- drivers/net/wireless/realtek/rtw88/main.h     |   276 +-
- drivers/net/wireless/realtek/rtw88/pci.c      |    80 +-
- drivers/net/wireless/realtek/rtw88/pci.h      |     5 +
- drivers/net/wireless/realtek/rtw88/phy.c      |   324 +-
- drivers/net/wireless/realtek/rtw88/phy.h      |    20 +-
- drivers/net/wireless/realtek/rtw88/ps.c       |     4 +-
- drivers/net/wireless/realtek/rtw88/reg.h      |   260 +-
- drivers/net/wireless/realtek/rtw88/rtw8703b.c |   161 +-
- .../net/wireless/realtek/rtw88/rtw8723cs.c    |     4 +-
- drivers/net/wireless/realtek/rtw88/rtw8723d.c |    77 +-
- .../net/wireless/realtek/rtw88/rtw8723de.c    |     3 +-
- .../net/wireless/realtek/rtw88/rtw8723ds.c    |     4 +-
- .../net/wireless/realtek/rtw88/rtw8723du.c    |     2 +-
- drivers/net/wireless/realtek/rtw88/rtw8723x.c |    62 +-
- drivers/net/wireless/realtek/rtw88/rtw8812a.c |  1124 +
- drivers/net/wireless/realtek/rtw88/rtw8812a.h |    10 +
- .../wireless/realtek/rtw88/rtw8812a_table.c   |  2812 ++
- .../wireless/realtek/rtw88/rtw8812a_table.h   |    26 +
- .../net/wireless/realtek/rtw88/rtw8812au.c    |    94 +
- drivers/net/wireless/realtek/rtw88/rtw8814a.c |  2269 ++
- drivers/net/wireless/realtek/rtw88/rtw8814a.h |    62 +
- .../wireless/realtek/rtw88/rtw8814a_table.c   | 23930 ++++++++++++++
- .../wireless/realtek/rtw88/rtw8814a_table.h   |    40 +
- .../net/wireless/realtek/rtw88/rtw8814ae.c    |    31 +
- .../net/wireless/realtek/rtw88/rtw8814au.c    |    54 +
- drivers/net/wireless/realtek/rtw88/rtw8821a.c |  1225 +
- drivers/net/wireless/realtek/rtw88/rtw8821a.h |    10 +
- .../wireless/realtek/rtw88/rtw8821a_table.c   |  2350 ++
- .../wireless/realtek/rtw88/rtw8821a_table.h   |    21 +
- .../net/wireless/realtek/rtw88/rtw8821au.c    |    78 +
- drivers/net/wireless/realtek/rtw88/rtw8821c.c |   127 +-
- drivers/net/wireless/realtek/rtw88/rtw8821c.h |    24 -
- .../net/wireless/realtek/rtw88/rtw8821ce.c    |     3 +-
- .../net/wireless/realtek/rtw88/rtw8821cs.c    |     4 +-
- .../net/wireless/realtek/rtw88/rtw8821cu.c    |     2 +-
- drivers/net/wireless/realtek/rtw88/rtw8822b.c |    98 +-
- drivers/net/wireless/realtek/rtw88/rtw8822b.h |    12 -
- .../net/wireless/realtek/rtw88/rtw8822be.c    |     3 +-
- .../net/wireless/realtek/rtw88/rtw8822bs.c    |     4 +-
- .../net/wireless/realtek/rtw88/rtw8822bu.c    |    14 +-
- drivers/net/wireless/realtek/rtw88/rtw8822c.c |   107 +-
- .../net/wireless/realtek/rtw88/rtw8822ce.c    |     3 +-
- .../net/wireless/realtek/rtw88/rtw8822cs.c    |     4 +-
- .../net/wireless/realtek/rtw88/rtw8822cu.c    |     2 +-
- drivers/net/wireless/realtek/rtw88/rtw88xxa.c |  1989 ++
- drivers/net/wireless/realtek/rtw88/rtw88xxa.h |   175 +
- drivers/net/wireless/realtek/rtw88/rx.c       |   118 +-
- drivers/net/wireless/realtek/rtw88/rx.h       |    64 +-
- drivers/net/wireless/realtek/rtw88/sar.c      |     6 +-
- drivers/net/wireless/realtek/rtw88/sar.h      |     3 +
- drivers/net/wireless/realtek/rtw88/sdio.c     |    67 +-
- drivers/net/wireless/realtek/rtw88/sdio_ids.h |    11 +
- drivers/net/wireless/realtek/rtw88/tx.c       |    46 +-
- drivers/net/wireless/realtek/rtw88/tx.h       |     4 +-
- drivers/net/wireless/realtek/rtw88/usb.c      |   374 +-
- drivers/net/wireless/realtek/rtw88/usb.h      |     6 +
- sound/usb/quirks.c                            |    35 +-
- 79 files changed, 68923 insertions(+), 2244 deletions(-)
- create mode 100644 drivers/net/usb/ax88179_178a.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/bitfield.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/compiler.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/convert_firmware.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/convert_firmware.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/led.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/led.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8812a.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8812a.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8812a_table.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8812a_table.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8812au.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8814a.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8814a.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8814a_table.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8814a_table.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8814ae.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8814au.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8821a.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8821a.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8821a_table.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8821a_table.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw8821au.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw88xxa.c
- create mode 100644 drivers/net/wireless/realtek/rtw88/rtw88xxa.h
- create mode 100644 drivers/net/wireless/realtek/rtw88/sdio_ids.h
-
+diff --git a/arch/arm/boot/dts/overlays/Makefile b/arch/arm/boot/dts/overlays/Makefile
+index f06c5e9ae..8968b74c4 100644
+--- a/arch/arm/boot/dts/overlays/Makefile
++++ b/arch/arm/boot/dts/overlays/Makefile
+@@ -65,6 +65,7 @@ dtbo-$(CONFIG_ARCH_BCM2835) += \
+ 	edt-ft5406.dtbo \
+ 	enc28j60.dtbo \
+ 	enc28j60-spi2.dtbo \
++	es9039q2m-i2s.dtbo \
+ 	exc3000.dtbo \
+ 	ezsound-6x8iso.dtbo \
+ 	fbtft.dtbo \
+diff --git a/arch/arm/boot/dts/overlays/es9039q2m-i2s-overlay.dts b/arch/arm/boot/dts/overlays/es9039q2m-i2s-overlay.dts
+new file mode 100644
+index 000000000..0a834a0ee
+--- /dev/null
++++ b/arch/arm/boot/dts/overlays/es9039q2m-i2s-overlay.dts
+@@ -0,0 +1,82 @@
++/dts-v1/;
++
++/ {
++	compatible = "brcm,bcm2835";
++
++	fragment@0 {
++		target = <0xffffffff>;
++
++		__overlay__ {
++			status = "okay";
++		};
++	};
++
++	fragment@1 {
++		target-path = "/";
++
++		__overlay__ {
++
++			es9039q2m-codec {
++				compatible = "ti,pcm5102a";
++				#sound-dai-cells = <0x00>;
++				status = "okay";
++				label = "es9039q2m-codec";
++				phandle = <0x02>;
++			};
++		};
++	};
++
++	fragment@2 {
++		target = <0xffffffff>;
++
++		__overlay__ {
++			compatible = "simple-audio-card";
++			i2s-controller = <0xffffffff>;
++			status = "okay";
++			simple-audio-card,name = "es9039q2m";
++			simple-audio-card,format = "i2s";
++			simple-audio-card,bitclock-master = <0x01>;
++			simple-audio-card,frame-master = <0x01>;
++
++			simple-audio-card,cpu {
++				sound-dai = <0xffffffff>;
++				dai-tdm-slot-num = <0x02>;
++				dai-tdm-slot-width = <0x20>;
++				system-clock-frequency = <0x2faf080>;
++				phandle = <0x01>;
++			};
++
++			simple-audio-card,codec {
++				sound-dai = <0x02>;
++				sound-name-prefix = "DAC";
++				phandle = <0x03>;
++			};
++		};
++	};
++
++	__symbols__ {
++		es9039q2m_codec = "/fragment@1/__overlay__/es9039q2m-codec";
++		dailink0_master = "/fragment@2/__overlay__/simple-audio-card,cpu";
++		snd_codec = "/fragment@2/__overlay__/simple-audio-card,codec";
++	};
++
++	__fixups__ {
++		i2s_clk_producer = "/fragment@0:target:0\0/fragment@2/__overlay__:i2s-controller:0\0/fragment@2/__overlay__/simple-audio-card,cpu:sound-dai:0";
++		sound = "/fragment@2:target:0";
++	};
++
++	__local_fixups__ {
++
++		fragment@2 {
++
++			__overlay__ {
++				simple-audio-card,bitclock-master = <0x00>;
++				simple-audio-card,frame-master = <0x00>;
++
++				simple-audio-card,codec {
++					sound-dai = <0x00>;
++				};
++			};
++		};
++	};
++};
 diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
 index b034ef8a7..914464e56 100644
 --- a/drivers/net/usb/ax88179_178a.c
@@ -75972,6 +75958,3 @@ index 2d64455d0..7af862e39 100644
  	VENDOR_FLG(0x3336, /* HEM devices */
  		   QUIRK_FLAG_DSD_RAW),
  	VENDOR_FLG(0x3353, /* Khadas devices */
--- 
-2.43.0
-
