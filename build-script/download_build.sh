@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CPU=4
-KERNEL_VERSION="6.12.50"
+KERNEL_VERSION="6.12.47"
 
 case $KERNEL_VERSION in
     "6.12.50")
