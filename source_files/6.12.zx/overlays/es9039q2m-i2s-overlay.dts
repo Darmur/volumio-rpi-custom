@@ -1,0 +1,65 @@
+/* Definitions for Volumio Zero ES9039QMD DAC
+Actually, this is a generic I2S biding.
+*/
+
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target = <&i2s_clk_producer>;
+		__overlay__ {
+			status = "okay";
+		};
+	};
+
+	fragment@1 {
+		target-path = "/";
+		__overlay__ {
+			es9039q2m_codec: es9039q2m-codec {
+				#sound-dai-cells = <0>;
+				/* Currently from user-space, full driver coming Soon™ */
+				compatible = "linux,spdif-dit";
+				status = "okay";
+			};
+		};
+	};
+
+	fragment@2 {
+		target = <&sound>;
+		__overlay__ {
+			compatible = "simple-audio-card";
+			i2s-controller = <&i2s_clk_producer>;
+			status = "okay";
+
+			simple-audio-card,name = "es9039q2m";
+			simple-audio-card,format = "i2s";
+
+			simple-audio-card,bitclock-master = <&dailink0_master>;
+			simple-audio-card,frame-master = <&dailink0_master>;
+
+			/* Future DAPM
+			simple-audio-card,widgets =
+				"Line", "Line Out";
+
+			simple-audio-card,routing =
+				"Line Out", "LOUT",
+				"Line Out", "ROUT";
+			*/
+			/* I2S master (2×32-bit slots) */
+			dailink0_master: simple-audio-card,cpu {
+				sound-dai = <&i2s_clk_producer>;
+				dai-tdm-slot-num = <2>;
+				dai-tdm-slot-width = <32>;
+				system-clock-frequency = <50000000>;
+			};
+
+			snd_codec: simple-audio-card,codec {
+					sound-dai = <&es9039q2m_codec>;
+					sound-name-prefix = "DAC";
+			};
+		};
+	};
+};
