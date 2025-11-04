@@ -12,22 +12,18 @@ index f06c5e9ae..8968b74c4 100644
  	fbtft.dtbo \
 diff --git a/arch/arm/boot/dts/overlays/es9039q2m-i2s-overlay.dts b/arch/arm/boot/dts/overlays/es9039q2m-i2s-overlay.dts
 new file mode 100644
-index 000000000..5ae28926f
+index 000000000..0a834a0ee
 --- /dev/null
 +++ b/arch/arm/boot/dts/overlays/es9039q2m-i2s-overlay.dts
-@@ -0,0 +1,65 @@
-+/* Definitions for Volumio Zero ES9039QMD DAC
-+Actually, this is a generic I2S biding.
-+*/
-+
+@@ -0,0 +1,82 @@
 +/dts-v1/;
-+/plugin/;
 +
 +/ {
 +	compatible = "brcm,bcm2835";
 +
 +	fragment@0 {
-+		target = <&i2s_clk_producer>;
++		target = <0xffffffff>;
++
 +		__overlay__ {
 +			status = "okay";
 +		};
@@ -35,48 +31,69 @@ index 000000000..5ae28926f
 +
 +	fragment@1 {
 +		target-path = "/";
++
 +		__overlay__ {
-+			es9039q2m_codec: es9039q2m-codec {
-+				#sound-dai-cells = <0>;
-+				/* Currently from user-space, full driver coming Soon™ */
-+				compatible = "linux,spdif-dit";
++
++			es9039q2m-codec {
++				compatible = "ti,pcm5102a";
++				#sound-dai-cells = <0x00>;
 +				status = "okay";
++				label = "es9039q2m-codec";
++				phandle = <0x02>;
 +			};
 +		};
 +	};
 +
 +	fragment@2 {
-+		target = <&sound>;
++		target = <0xffffffff>;
++
 +		__overlay__ {
 +			compatible = "simple-audio-card";
-+			i2s-controller = <&i2s_clk_producer>;
++			i2s-controller = <0xffffffff>;
 +			status = "okay";
-+
 +			simple-audio-card,name = "es9039q2m";
 +			simple-audio-card,format = "i2s";
++			simple-audio-card,bitclock-master = <0x01>;
++			simple-audio-card,frame-master = <0x01>;
 +
-+			simple-audio-card,bitclock-master = <&dailink0_master>;
-+			simple-audio-card,frame-master = <&dailink0_master>;
-+
-+			/* Future DAPM
-+			simple-audio-card,widgets =
-+				"Line", "Line Out";
-+
-+			simple-audio-card,routing =
-+				"Line Out", "LOUT",
-+				"Line Out", "ROUT";
-+			*/
-+			/* I2S master (2×32-bit slots) */
-+			dailink0_master: simple-audio-card,cpu {
-+				sound-dai = <&i2s_clk_producer>;
-+				dai-tdm-slot-num = <2>;
-+				dai-tdm-slot-width = <32>;
-+				system-clock-frequency = <50000000>;
++			simple-audio-card,cpu {
++				sound-dai = <0xffffffff>;
++				dai-tdm-slot-num = <0x02>;
++				dai-tdm-slot-width = <0x20>;
++				system-clock-frequency = <0x2faf080>;
++				phandle = <0x01>;
 +			};
 +
-+			snd_codec: simple-audio-card,codec {
-+					sound-dai = <&es9039q2m_codec>;
-+					sound-name-prefix = "DAC";
++			simple-audio-card,codec {
++				sound-dai = <0x02>;
++				sound-name-prefix = "DAC";
++				phandle = <0x03>;
++			};
++		};
++	};
++
++	__symbols__ {
++		es9039q2m_codec = "/fragment@1/__overlay__/es9039q2m-codec";
++		dailink0_master = "/fragment@2/__overlay__/simple-audio-card,cpu";
++		snd_codec = "/fragment@2/__overlay__/simple-audio-card,codec";
++	};
++
++	__fixups__ {
++		i2s_clk_producer = "/fragment@0:target:0\0/fragment@2/__overlay__:i2s-controller:0\0/fragment@2/__overlay__/simple-audio-card,cpu:sound-dai:0";
++		sound = "/fragment@2:target:0";
++	};
++
++	__local_fixups__ {
++
++		fragment@2 {
++
++			__overlay__ {
++				simple-audio-card,bitclock-master = <0x00>;
++				simple-audio-card,frame-master = <0x00>;
++
++				simple-audio-card,codec {
++					sound-dai = <0x00>;
++				};
 +			};
 +		};
 +	};
