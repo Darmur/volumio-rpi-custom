@@ -6,7 +6,7 @@ KERNEL_VERSION="6.12.50"
 case $KERNEL_VERSION in
     "6.12.50")
       KERNEL_COMMIT="a22bb2f110bc8953523714ac58251f47ae4e2d2b"
-      PATCH="custom-6.12.z.patch"
+      PATCH="custom-6.12.zx.patch"
       ;;
     "6.12.47")
       KERNEL_COMMIT="6d1da66a7b1358c9cd324286239f37203b7ce25c"
