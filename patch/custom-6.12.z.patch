@@ -98,6 +98,105 @@ index 000000000..0a834a0ee
 +		};
 +	};
 +};
+diff --git a/drivers/gpu/drm/panel/panel-waveshare-dsi-v2.c b/drivers/gpu/drm/panel/panel-waveshare-dsi-v2.c
+index cfff92ead..ac31c61d8 100644
+--- a/drivers/gpu/drm/panel/panel-waveshare-dsi-v2.c
++++ b/drivers/gpu/drm/panel/panel-waveshare-dsi-v2.c
+@@ -22,6 +22,9 @@
+ 
+ #include <video/mipi_display.h>
+ 
++#define WS_DSI_RETRIES		3	/* Number of retry attempts for DSI operations */
++#define WS_DSI_RETRY_DELAY_MS	50	/* Delay between retries in milliseconds */
++
+ struct ws_panel_desc {
+ 	const struct panel_init_cmd *init;
+ 	const struct drm_display_mode *mode;
+@@ -1688,6 +1691,9 @@ static int ws_panel_init_dcs_cmd(struct ws_panel *ts)
+ 	struct drm_panel *panel = &ts->panel;
+ 	int i, err = 0;
+ 
++	/* Allow panel controller to stabilize after power-up/reset */
++	msleep(WS_DSI_RETRY_DELAY_MS);
++
+ 	if (ts->desc->init) {
+ 		const struct panel_init_cmd *init_cmds = ts->desc->init;
+ 
+@@ -1701,11 +1707,20 @@ static int ws_panel_init_dcs_cmd(struct ws_panel *ts)
+ 				break;
+ 
+ 			case INIT_DCS_CMD:
+-				err = mipi_dsi_dcs_write(
+-					dsi, cmd->data[0],
+-					cmd->len <= 1 ? NULL : &cmd->data[1],
+-					cmd->len - 1);
++			{
++				int retries = WS_DSI_RETRIES;
++
++				do {
++					err = mipi_dsi_dcs_write(
++						dsi, cmd->data[0],
++						cmd->len <= 1 ? NULL : &cmd->data[1],
++						cmd->len - 1);
++					if (err >= 0)
++						break;
++					msleep(WS_DSI_RETRY_DELAY_MS);
++				} while (--retries > 0);
+ 				break;
++			}
+ 
+ 			default:
+ 				err = -EINVAL;
+diff --git a/drivers/gpu/drm/panel/panel-waveshare-dsi.c b/drivers/gpu/drm/panel/panel-waveshare-dsi.c
+index 711b4c36c..b16892487 100644
+--- a/drivers/gpu/drm/panel/panel-waveshare-dsi.c
++++ b/drivers/gpu/drm/panel/panel-waveshare-dsi.c
+@@ -24,6 +24,10 @@
+ 
+ #define WS_DSI_DRIVER_NAME "ws-ts-dsi"
+ 
++#define WS_I2C_RETRIES		3	/* Number of retry attempts for I2C operations */
++#define WS_I2C_RETRY_DELAY_MS	50	/* Delay between retries in milliseconds */
++#define WS_INIT_DELAY_MS	100	/* Initial stabilization delay for panel controller */
++
+ struct ws_panel {
+ 	struct drm_panel base;
+ 	struct mipi_dsi_device *dsi;
+@@ -329,13 +333,19 @@ static struct ws_panel *panel_to_ts(struct drm_panel *panel)
+ 	return container_of(panel, struct ws_panel, base);
+ }
+ 
+-static void ws_panel_i2c_write(struct ws_panel *ts, u8 reg, u8 val)
++static int ws_panel_i2c_write(struct ws_panel *ts, u8 reg, u8 val)
+ {
+-	int ret;
++	int ret, retries = WS_I2C_RETRIES;
+ 
+-	ret = i2c_smbus_write_byte_data(ts->i2c, reg, val);
+-	if (ret)
+-		dev_err(&ts->i2c->dev, "I2C write failed: %d\n", ret);
++	while (retries--) {
++		ret = i2c_smbus_write_byte_data(ts->i2c, reg, val);
++		if (!ret)
++			return 0;
++		msleep(WS_I2C_RETRY_DELAY_MS);
++	}
++	dev_err(&ts->i2c->dev, "I2C write failed after %d retries: %d\n",
++		WS_I2C_RETRIES, ret);
++	return ret;
+ }
+ 
+ static int ws_panel_disable(struct drm_panel *panel)
+@@ -479,6 +489,9 @@ static int ws_panel_probe(struct i2c_client *i2c)
+ 
+ 	ts->i2c = i2c;
+ 
++	/* Allow panel controller to stabilize after power-up */
++	msleep(WS_INIT_DELAY_MS);
++
+ 	ws_panel_i2c_write(ts, 0xc0, 0x01);
+ 	ws_panel_i2c_write(ts, 0xc2, 0x01);
+ 	ws_panel_i2c_write(ts, 0xac, 0x01);
 diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
 index b034ef8a7..914464e56 100644
 --- a/drivers/net/usb/ax88179_178a.c
