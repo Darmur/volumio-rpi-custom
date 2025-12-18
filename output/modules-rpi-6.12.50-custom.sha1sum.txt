@@ -1,1 +1,1 @@
-d3d0c2e79f9dedadaae21e6245e9c2c71ef5cf6a  modules-rpi-6.12.50-custom.tar.gz
+877a69145659da231dc946ed8f139d911d1eb363  modules-rpi-6.12.50-custom.tar.gz
